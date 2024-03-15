@@ -292,11 +292,18 @@ def test_wazuh_db_range_checksum(configure_sockets_environment_module, connect_t
         - wdb_socket
     '''
     log_monitor = file_monitor.FileMonitor(WAZUH_LOG_PATH)
+
+    # Wait until database update
+    time.sleep(5)
+
     # Checksum Range calculus expected the first time
     agent_integrity_check()
     log_monitor.start(callback=make_callback('range checksum: Time: ', prefix=WAZUH_DB_PREFIX,
                                              escape=True), timeout=WAZUH_DB_CHECKSUM_CALCULUS_TIMEOUT)
     assert log_monitor.callback_result, 'Checksum Range wasn´t calculated the first time'
+
+    # Wait until database update
+    time.sleep(5)
 
     # Checksum Range avoid expected the next times
     agent_integrity_check()
